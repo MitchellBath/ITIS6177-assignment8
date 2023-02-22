@@ -82,10 +82,11 @@ app.get('/prices', (req, res) => {
  *          404:
  *              description: Error
  */
-app.post('/prices', (req, res) => {
-	const item = req.params
-	const price = req.query
-	prices.food.push({name: item, price: price})
+app.post('/prices/:foodItem', (req, res) => {
+	const {item} = req.params
+	const {price} = req.query
+	const foodItem = {name: item, price: price}
+	prices.food.push(foodItem)
 	res.json(prices)
 })
 
@@ -112,7 +113,7 @@ app.post('/prices', (req, res) => {
  *          404:
  *              description: Error
  */
-app.patch('/prices', (req, res) => {
+app.patch('/prices/:foodItem', (req, res) => {
 	const {name} = req.params
 	const {newname} = req.query
 	
@@ -148,7 +149,7 @@ app.patch('/prices', (req, res) => {
  *          404:
  *              description: Error
  */
-app.put('/prices', (req, res) => {
+app.put('/prices/:foodItem', (req, res) => {
 	const {name} = req.params
 	const {price} = req.query
 	const index = prices.food.findIndex(fooditem => fooditem.name === name)
@@ -178,7 +179,7 @@ app.put('/prices', (req, res) => {
  *          404:
  *              description: Error
  */
-app.delete('/prices:food', (req, res) => {
+app.delete('/prices:foodItem', (req, res) => {
 	const name = req.params
 	const index = prices.food.findIndex(fooditem => fooditem.name === name)
 	if (index !== -1) {
