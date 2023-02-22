@@ -180,7 +180,7 @@ app.put('/prices/:foodItem', (req, res) => {
  *              description: Error
  */
 app.delete('/prices:foodItem', (req, res) => {
-	const foodItem = req.params
+	const {foodItem} = req.params
 	const index = prices.food.findIndex(item => item.name === foodItem)
 	if (index !== -1) {
 		prices.food.splice(index, 1)
