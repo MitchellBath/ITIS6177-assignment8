@@ -44,7 +44,7 @@ const prices = {
 
 /**
  * @swagger
- * /price:
+ * /prices:
  *    get:
  *      description: Return all prices
  *      produces:
@@ -52,6 +52,8 @@ const prices = {
  *      responses:
  *          200:
  *              description: Object food containing array of food prices
+ *          404:
+ *              description: Error
  */
 app.get('/prices', (req, res) => {
     res.json(prices);
@@ -59,39 +61,64 @@ app.get('/prices', (req, res) => {
 
 /**
  * @swagger
- * /price:
+ * /prices/{foodItem}:
  *    post:
- *      description: Add a new food item with price
- *      produces:
- *          - application/json
+ *      description: Adds a new food item
+ *      parameters:
+ *          - name: foodItem
+ *            in: path
+ *            description: Name of food to post
+ *            schema:
+ *              type: string
+ *          - name: foodPrice
+ *            in: query
+ *            description: Price of the food to post
+ *            schema:
+ *              type: integer
+ *              format: int64
  *      responses:
  *          200:
- *              description: Object food containing array of food prices with new food and price
+ *              description: New food posted
+ *          404:
+ *              description: Error
  */
 app.post('/prices', (req, res) => {
-	const item = req.body
-	prices.food.push(item)
+	const item = req.params
+	const price = req.query
+	prices.food.push({name: item, price: price})
 	res.json(prices)
 })
 
 /**
  * @swagger
- * /patch:
- *    get:
- *      description: Update the price of a food
- *      produces:
- *          - application/json
+ * /prices/{foodItem}:
+ *    patch:
+ *      description: Update a food item name
+ *      parameters:
+ *          - name: foodItem
+ *            in: path
+ *            description: Name of food to update
+ *            schema:
+ *              type: string
+ *          - name: newName
+ *            in: query
+ *            description: Name to give the updated food
+ *            schema:
+ *              type: integer
+ *              format: int64
  *      responses:
  *          200:
- *              description: Object food containing array of food prices with updated food price
+ *              description: Food Name successfully updated
+ *          404:
+ *              description: Error
  */
 app.patch('/prices', (req, res) => {
 	const {name} = req.params
-	const {price} = req.body
+	const {newname} = req.query
 	
 	const index = prices.food.findIndex(fooditem => fooditem.name === name)
 	if (index !== -1) {
-		prices.food[index].price = price
+		prices.food[index].name = newname
 		res.json(prices)
 	} else {
 		res.status(404).json({message: 'Food not found'})
@@ -100,21 +127,33 @@ app.patch('/prices', (req, res) => {
 
 /**
  * @swagger
- * /price:
+ * /prices/{foodItem}:
  *    put:
- *      description: Update the name of a food
- *      produces:
- *          - application/json
+ *      description: Update a food item price
+ *      parameters:
+ *          - name: foodItem
+ *            in: path
+ *            description: Name of food to update
+ *            schema:
+ *              type: string
+ *          - name: newPrice
+ *            in: query
+ *            description: Price to give the updated food
+ *            schema:
+ *              type: integer
+ *              format: int64
  *      responses:
  *          200:
- *              description: Object food containing array of food prices with updated food name
+ *              description: Food Price successfully updated
+ *          404:
+ *              description: Error
  */
 app.put('/prices', (req, res) => {
 	const {name} = req.params
-	const newname = req.body
+	const {price} = req.query
 	const index = prices.food.findIndex(fooditem => fooditem.name === name)
 	if (index !== -1) {
-		prices.food[index] = newname
+		prices.food[index].price = Number(price)
 		res.json(prices)
 	} else {
 		res.status(404).json({message: 'Food not found'})
@@ -122,22 +161,29 @@ app.put('/prices', (req, res) => {
 })
 
 /**
+/**
  * @swagger
- * /price:
+ * /prices/{foodItem}:
  *    delete:
- *      description: Delete a food
- *      produces:
- *          - application/json
+ *      description: Deletes a food item
+ *      parameters:
+ *          - name: foodItem
+ *            in: path
+ *            description: Name of food to delete
+ *            schema:
+ *              type: string
  *      responses:
  *          200:
- *              description: Object food containing array of food prices sans deleted food
+ *              description: Food Name successfully deleted
+ *          404:
+ *              description: Error
  */
 app.delete('/prices:food', (req, res) => {
-	const name = req.params.food
+	const name = req.params
 	const index = prices.food.findIndex(fooditem => fooditem.name === name)
 	if (index !== -1) {
 		prices.food.splice(index, 1)
-		res.json({message: `${name} deleted` })
+		res.json(prices)
 	} else {
 		res.status(404).json({message: 'Food not found'})
 	}
