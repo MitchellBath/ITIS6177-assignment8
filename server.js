@@ -162,7 +162,6 @@ app.put('/prices/:foodItem', (req, res) => {
 })
 
 /**
-/**
  * @swagger
  * /prices/{foodItem}:
  *    delete:
@@ -179,7 +178,7 @@ app.put('/prices/:foodItem', (req, res) => {
  *          404:
  *              description: Error
  */
-app.delete('/prices:foodItem', (req, res) => {
+app.delete('/prices/:foodItem', (req, res) => {
 	const {foodItem} = req.params
 	const index = prices.food.findIndex(item => item.name === foodItem)
 	if (index !== -1) {
