@@ -83,10 +83,10 @@ app.get('/prices', (req, res) => {
  *              description: Error
  */
 app.post('/prices/:foodItem', (req, res) => {
-	const {item} = req.params
-	const {price} = req.query
-	const foodItem = {name: item, price: price}
-	prices.food.push(foodItem)
+	const {foodItem} = req.params
+	const {foodPrice} = req.query
+	const newitem = {name: foodItem, price: foodPrice}
+	prices.food.push(newitem)
 	res.json(prices)
 })
 
@@ -114,12 +114,12 @@ app.post('/prices/:foodItem', (req, res) => {
  *              description: Error
  */
 app.patch('/prices/:foodItem', (req, res) => {
-	const {name} = req.params
-	const {newname} = req.query
+	const {foodItem} = req.params
+	const {newName} = req.query
 	
-	const index = prices.food.findIndex(fooditem => fooditem.name === name)
+	const index = prices.food.findIndex(item => item.name === foodItem)
 	if (index !== -1) {
-		prices.food[index].name = newname
+		prices.food[index].name = newName
 		res.json(prices)
 	} else {
 		res.status(404).json({message: 'Food not found'})
@@ -150,11 +150,11 @@ app.patch('/prices/:foodItem', (req, res) => {
  *              description: Error
  */
 app.put('/prices/:foodItem', (req, res) => {
-	const {name} = req.params
-	const {price} = req.query
-	const index = prices.food.findIndex(fooditem => fooditem.name === name)
+	const {foodItem} = req.params
+	const {newPrice} = req.query
+	const index = prices.food.findIndex(item => item.name === foodItem)
 	if (index !== -1) {
-		prices.food[index].price = Number(price)
+		prices.food[index].price = Number(newPrice)
 		res.json(prices)
 	} else {
 		res.status(404).json({message: 'Food not found'})
@@ -180,8 +180,8 @@ app.put('/prices/:foodItem', (req, res) => {
  *              description: Error
  */
 app.delete('/prices:foodItem', (req, res) => {
-	const name = req.params
-	const index = prices.food.findIndex(fooditem => fooditem.name === name)
+	const foodItem = req.params
+	const index = prices.food.findIndex(item => item.name === foodItem)
 	if (index !== -1) {
 		prices.food.splice(index, 1)
 		res.json(prices)
